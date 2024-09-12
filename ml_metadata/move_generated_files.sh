@@ -35,19 +35,13 @@ function mlmd::move_generated_files() {
     bazel_genfiles="bazel-bin"
   fi
 
-  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/proto/metadata_store_pb2.py \
-    ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/proto
-  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/proto/metadata_store_service_pb2.py \
-    ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/proto
-  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/proto/metadata_store_service_pb2_grpc.py \
-    ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/proto
-  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/simple_types/proto/simple_types_pb2.py \
-    ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/simple_types/proto
-
+  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/proto/metadata_store_pb2.py ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/proto
+  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/proto/metadata_store_service_pb2.py ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/proto
+  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/proto/metadata_store_service_pb2_grpc.py ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/proto
+  cp -f ${BUILD_WORKSPACE_DIRECTORY}/${bazel_genfiles}/ml_metadata/simple_types/proto/simple_types_pb2.py ${BUILD_WORKSPACE_DIRECTORY}/ml_metadata/simple_types/proto
 
   MLMD_EXTENSION="ml_metadata/metadata_store/pywrap/metadata_store_extension.so"
-  cp -f ${BUILD_WORKSPACE_DIRECTORY}/bazel-bin/${MLMD_EXTENSION} \
-      ${BUILD_WORKSPACE_DIRECTORY}/${MLMD_EXTENSION}
+  cp -f ${BUILD_WORKSPACE_DIRECTORY}/bazel-bin/${MLMD_EXTENSION} ${BUILD_WORKSPACE_DIRECTORY}/${MLMD_EXTENSION}
 
   chmod +w "${BUILD_WORKSPACE_DIRECTORY}/${MLMD_EXTENSION}"
 }
