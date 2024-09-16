@@ -30,5 +30,5 @@ ml_metadata_proto_library_py(
     srcs = ["simple_types.proto"],
     api_version = 2,
     oss_deps = ["//ml_metadata/proto:metadata_store_py_pb2"],
-    proto_library = "simple_types_proto",
+    proto_lib_name = "simple_types_proto",
 )

@@ -17,9 +17,13 @@ This module contains build rules for ml_metadata in OSS.
 
 load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
-# load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
-load("@com_google_protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@com_google_protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
+
+# Which of these is the right one? Only the second has `use_grpc_plugin` defined;
+# one is a function and the other is a rule?
+# load("@com_google_protobuf//bazel:py_proto_library.bzl", "py_proto_library")
+load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
 
 def ml_metadata_cc_test(
         name,
@@ -56,31 +60,20 @@ def ml_metadata_proto_library(
         testonly = 0,
         cc_grpc_version = None):
     """Opensource cc_proto_library."""
-    _ignore = [has_services]
-    native.filegroup(
-        name = name + "_proto_srcs",
-        srcs = srcs,
-        testonly = testonly,
-    )
-
-    use_grpc_plugin = None
-    if cc_grpc_version:
-        use_grpc_plugin = True
-    cc_proto_library(
+    proto_library(
         name = name,
-        srcs = srcs,
         deps = deps,
-        cc_libs = ["@com_google_protobuf//:protobuf"],
-        protoc = "@com_google_protobuf//:protoc",
-        default_runtime = "@com_google_protobuf//:protobuf",
-        use_grpc_plugin = use_grpc_plugin,
+        srcs = srcs,
+    )
+    cc_proto_library(
+        name = name + '_cc',
+        deps = [name],
         testonly = testonly,
-        visibility = visibility,
     )
 
 def ml_metadata_proto_library_py(
         name,
-        proto_library = None,
+        proto_lib_name,
         api_version = None,
         srcs = [],
         deps = [],
@@ -89,15 +82,9 @@ def ml_metadata_proto_library_py(
         oss_deps = [],
         use_grpc_plugin = False):
     """Opensource py_proto_library."""
-    _ignore = [proto_library, api_version, oss_deps]
     py_proto_library(
         name = name,
-        srcs = srcs,
-        srcs_version = "PY2AND3",
-        deps = ["@com_google_protobuf//:well_known_types_py_pb2"] + deps + oss_deps,
-        default_runtime = "@com_google_protobuf//:protobuf_python",
-        protoc = "@com_google_protobuf//:protoc",
-        visibility = visibility,
+        deps = [proto_lib_name] + deps + oss_deps,
         testonly = testonly,
         use_grpc_plugin = use_grpc_plugin,
     )
