@@ -43,9 +43,8 @@ rules_foreign_cc_dependencies()
 
 http_archive(
     name = "com_google_absl",
-    urls = ["https://github.com/abseil/abseil-cpp/archive/940c06c25d2953f44310b68eb8aab6114dba11fb.zip"],
-    strip_prefix = "abseil-cpp-940c06c25d2953f44310b68eb8aab6114dba11fb",
-    sha256 = "0e800799aa64d0b4d354f3ff317bbd5fbf42f3a522ab0456bb749fc8d3b67415",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/20240722.0.zip"],
+    strip_prefix = "abseil-cpp-20240722.0",
 )
 
 http_archive(
@@ -94,17 +93,17 @@ http_archive(
     ],
 )
 
-# Needed by abseil-py by zetasql.
-http_archive(
-    name = "six_archive",
-    urls = [
-        "http://mirror.bazel.build/pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
-        "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
-    ],
-    sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
-    strip_prefix = "six-1.10.0",
-    build_file = "//ml_metadata/third_party:six.BUILD"
-)
+# # Needed by abseil-py by zetasql.
+# http_archive(
+#     name = "six_archive",
+#     urls = [
+#         "http://mirror.bazel.build/pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+#         "https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz",
+#     ],
+#     sha256 = "105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a",
+#     strip_prefix = "six-1.10.0",
+#     build_file = "//ml_metadata/third_party:six.BUILD"
+# )
 
 http_archive(
     name = "com_google_protobuf",
@@ -255,31 +254,26 @@ http_archive(
     url = "https://github.com/gflags/gflags/archive/a738fdf9338412f83ab3f26f31ac11ed3f3ec4bd.zip",
 )
 
-ZETASQL_COMMIT = "ac37cf5c0d80b5605176fc0f29e87b12f00be693" # 08/10/2022
 http_archive(
     name = "com_google_zetasql",
-    urls = ["https://github.com/google/zetasql/archive/%s.zip" % ZETASQL_COMMIT],
-    strip_prefix = "zetasql-%s" % ZETASQL_COMMIT,
+    urls = ["https://github.com/google/zetasql/archive/2024.08.2.zip"],
+    strip_prefix = "zetasql-2024.08.2",
     #patches = ["//ml_metadata/third_party:zetasql.patch"],
-    sha256 = '651a768cd51627f58aa6de7039aba9ddab22f4b0450521169800555269447840'
 )
 
 load("@com_google_zetasql//bazel:zetasql_deps_step_1.bzl", "zetasql_deps_step_1")
 zetasql_deps_step_1()
 load("@com_google_zetasql//bazel:zetasql_deps_step_2.bzl", "zetasql_deps_step_2")
-zetasql_deps_step_2(
-    analyzer_deps = True,
-    evaluator_deps = True,
-    tools_deps = False,
-    java_deps = False,
-    testing_deps = False)
+zetasql_deps_step_2()
+load("@com_google_zetasql//bazel:zetasql_deps_step_3.bzl", "zetasql_deps_step_3")
+zetasql_deps_step_3()
 
 # This is part of what zetasql_deps_step_3() does.
-load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
-switched_rules_by_language(
-    name = "com_google_googleapis_imports",
-    cc = True,
-)
+# load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+# switched_rules_by_language(
+#     name = "com_google_googleapis_imports",
+#     cc = True,
+# )
 
 
 
